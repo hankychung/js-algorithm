@@ -1,4 +1,4 @@
-function LinkList() {
+function LinkList(...args) {  
   // 定义节点类
   let Node = function(data) {
     this.data = data
@@ -8,6 +8,24 @@ function LinkList() {
   let length = 0, 
       head = null,
       tail = null 
+  // 实例化链表对象时对传入参数进行初始化
+  if (args) {    
+    length = args.length
+    let initNode = {}
+    for (let idx in args) {  
+      initNode[idx] = new Node(args[idx]) 
+    }    
+    for (let idx in initNode) {
+      if (idx == 0) {
+        head = initNode[idx]
+      }
+      if (idx == length - 1) {
+        tail = initNode[length - 1]
+        break
+      }   
+      initNode[idx].next = initNode[parseInt(idx)+1] 
+    }    
+  }  
   // 判空
   function isNull() {
     if (!length) {
@@ -17,7 +35,7 @@ function LinkList() {
     return false
   }
   // 获取索引节点
-  function getNode(idx) {
+  this.getNode = idx => {
     if (idx<0 || idx >= length) {
       console.log('illegal index!')
       return null
@@ -66,8 +84,8 @@ function LinkList() {
       return delNode.data  
     }
     // 定位删除的节点
-    let preNode = getNode(index - 1)      
-    delNode = getNode(index)
+    let preNode = this.getNode(index - 1)      
+    delNode = this.getNode(index)
     if (delNode.next == null) {
       // 删除的是尾节点
       tail = preNode
@@ -91,13 +109,16 @@ function LinkList() {
       // 在首节点插入元素
       insertNode.next = head
       head = insertNode
+      if (length == 0) {
+        tail = insertNode
+      }
     } else if (idx == length) {
       // 在尾节点后一位插入元素      
       return this.append(data)
     } else {
       // 在中间任一位置插入元素
-      let preNode = getNode(idx - 1),
-      curNode = getNode(idx)
+      let preNode = this.getNode(idx - 1),
+      curNode = this.getNode(idx)
       preNode.next = insertNode
       insertNode.next = curNode
     }
@@ -121,7 +142,23 @@ function LinkList() {
       cur_idx += 1
       cur_node = cur_node.next
     }    
-    return false
+    return -1
+  }
+  // 返回链表长度
+  this.length = () => length
+  // 链表是否为空
+  this.isEmpty = () => {
+    if (length) {
+      return false
+    } else {
+      return true
+    }
+  }
+  // 清空链表
+  this.clear = () => {
+    length = 0
+    head = null
+    tail = null
   }
   // 打印链表
   this.print = () => {
@@ -137,14 +174,24 @@ function LinkList() {
   }
 }
 
-let link = new LinkList()
-link.append('first')
-link.append('middle')
-link.append('end')
-link.insert('beyond', 0)
+let link = new LinkList('first', 'middle', 'end')
 link.print()
-link.insert('mm', 2)
+link.insert('hello', 0)
 link.print()
-link.insert('mm1', 5)
+console.log(link.indexOf('middle'))
+console.log(link.getNode(3))
+console.log(link.head())
 link.print()
+console.log(link.tail())
+console.log(link.isEmpty())
+link.clear()
+link.print()
+link.insert('hello', 0)
+link.print()
+console.log(link.indexOf('middle'))
+console.log(link.getNode(3))
+console.log(link.head())
+console.log(link.tail())
+console.log(link.isEmpty())
+
 
