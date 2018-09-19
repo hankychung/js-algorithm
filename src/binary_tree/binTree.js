@@ -56,8 +56,22 @@ function BinaryTree(table) {
     }
   }
   this.init()  
+  
+  // 前序遍历
+  this.pre_order = function(node){
+    debugger
+    console.log(node)
+    if(node==null){
+      debugger
+        return;
+    }
+    console.log(node.data);
+    this.pre_order(node.lftChildNode);
+    this.pre_order(node.rgtChildNode);
+  }
 }
 
 // 广义表 A(B(D,E(G,)),C(,F))# 
 let binTree = new BinaryTree('A(B(D,E(G,)),C(,F))#')
-console.log(binTree.root.lftChildNode.rgtChildNode.lftChildNode)
+
+binTree.pre_order(binTree.root.lftChildNode)
