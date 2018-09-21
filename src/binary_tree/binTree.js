@@ -1,16 +1,17 @@
 const Stack = require('../stack/stack')
 
-let stack = new Stack()
-// 二叉树节点构造器
-function BinaryTreeNode(data) {
-  this.data = data
-  this.parentNode = null
-  this.lftChildNode = null
-  this.rgtChildNode = null
-}
 // 二叉树构造器
-function BinaryTree(table) {
-  this.root = null
+function BinaryTree(table) {  
+  let stack = new Stack()
+  // 二叉树节点构造器
+  function BinaryTreeNode(data) {
+    this.data = data
+    this.parentNode = null
+    this.lftChildNode = null
+    this.rgtChildNode = null
+  }  
+  // 初始化
+  let root = null  
   this.init = function() {
     let childFlag = 0 // 1为左子树节点标记, 2为右子树节点标记
     let node = null, father = null
@@ -20,8 +21,8 @@ function BinaryTree(table) {
         // 处理数据节点
         default: {
           node = new BinaryTreeNode(table[i])
-          if (!this.root) {
-            this.root = node
+          if (!root) {
+            root = node
           } else {
             father = stack.top()
             if (childFlag == 1) {
@@ -55,23 +56,58 @@ function BinaryTree(table) {
       }
     }
   }
-  this.init()  
-  
+  this.init()    
   // 前序遍历
-  this.pre_order = function(node){
-    debugger
-    console.log(node)
-    if(node==null){
-      debugger
-        return;
+  this.preOrder = node => {
+    if (!node) {
+      return
     }
-    console.log(node.data);
-    this.pre_order(node.lftChildNode);
-    this.pre_order(node.rgtChildNode);
+    console.log(node.data)
+    this.preOrder(node.lftChildNode)
+    this.preOrder(node.rgtChildNode)
   }
+  // 返回根节点
+  this.rootNode = () => root
+  // 返回节点数
+  function nodeCount(node) {
+    if (!node) {
+      return 0
+    }
+    let leftCount = nodeCount(node.lftChildNode),
+    rightCount = nodeCount(node.rgtChildNode)
+    return leftCount + rightCount + 1
+  }
+  this.size = () => nodeCount(root)
+  // 返回二叉树深度
+  function treeDepth(node) {
+    if (!node) {
+      return 0
+    }
+    let lftDepth = treeDepth(node.lftChildNode),
+    rgtDepth = treeDepth(node.rgtChildNode)
+    return lftDepth > rgtDepth ? lftDepth + 1 : rgtDepth + 1
+  }
+  this.depth = () => treeDepth(root)
+  // 查找节点
+  function find(node, data) {
+    if (!node) {     
+      return null
+    }    
+    if (node.data == data) {      
+      return node
+    }        
+    let lft = find(node.lftChildNode, data),
+    rgt = find(node.rgtChildNode, data)
+    if (lft) {
+      return lft
+    } 
+    return rgt
+  }
+  this.findNode = data => find(root, data) 
 }
 
 // 广义表 A(B(D,E(G,)),C(,F))# 
 let binTree = new BinaryTree('A(B(D,E(G,)),C(,F))#')
+console.log(binTree.findNode('C'))
 
-binTree.pre_order(binTree.root.lftChildNode)
+
