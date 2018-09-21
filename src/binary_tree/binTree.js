@@ -66,6 +66,15 @@ function BinaryTree(table) {
     this.preOrder(node.lftChildNode)
     this.preOrder(node.rgtChildNode)
   }
+  // 中序遍历
+  this.inOrder = node => {
+    if (!node) {
+      return
+    }
+    this.inOrder(node.lftChildNode)
+    console.log(node.data)
+    this.inOrder(node.rgtChildNode)
+  }
   // 返回根节点
   this.rootNode = () => root
   // 返回节点数
@@ -104,10 +113,22 @@ function BinaryTree(table) {
     return rgt
   }
   this.findNode = data => find(root, data) 
+  // 镜像
+  function mirror(node) {
+    if (!node) {
+      return 
+    }
+    let temp = node.lftChildNode
+    node.lftChildNode = node.rgtChildNode
+    node.rgtChildNode = temp
+    mirror(node.lftChildNode)
+    mirror(node.rgtChildNode)    
+  }
+  this.mirror = () => mirror(root)
 }
 
 // 广义表 A(B(D,E(G,)),C(,F))# 
 let binTree = new BinaryTree('A(B(D,E(G,)),C(,F))#')
-console.log(binTree.findNode('C'))
-
-
+// console.log(binTree.findNode('C'))
+binTree.mirror()
+binTree.inOrder(binTree.rootNode())
