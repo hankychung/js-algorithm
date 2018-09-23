@@ -1,1 +1,1 @@
-import './binary_tree/binTree'
+import './heap/minHeap'
