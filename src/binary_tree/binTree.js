@@ -1,15 +1,15 @@
 const Stack = require('../stack/stack')
 
+// 二叉树节点构造器
+function BinaryTreeNode(data) {
+  this.data = data
+  this.parentNode = null
+  this.lftChildNode = null
+  this.rgtChildNode = null
+}  
 // 二叉树构造器
 function BinaryTree(table) {  
-  let stack = new Stack()
-  // 二叉树节点构造器
-  function BinaryTreeNode(data) {
-    this.data = data
-    this.parentNode = null
-    this.lftChildNode = null
-    this.rgtChildNode = null
-  }  
+  let stack = new Stack()  
   // 初始化
   let root = null  
   this.init = function() {
@@ -128,7 +128,12 @@ function BinaryTree(table) {
 }
 
 // 广义表 A(B(D,E(G,)),C(,F))# 
-let binTree = new BinaryTree('A(B(D,E(G,)),C(,F))#')
+// let binTree = new BinaryTree('A(B(D,E(G,)),C(,F))#')
 // console.log(binTree.findNode('C'))
-binTree.mirror()
-binTree.inOrder(binTree.rootNode())
+// binTree.mirror()
+// binTree.inOrder(binTree.rootNode())
+
+module.exports = {
+  node: BinaryTreeNode,
+  tree: BinaryTree
+}
