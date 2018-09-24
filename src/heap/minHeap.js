@@ -101,6 +101,7 @@ function MinHeap(size) {
   this.size = () => curSize  
 }
 
+// *-- 番外篇 - 最小堆的应用 --*
 // 利用最小堆实现升序排序
 function Asc(arr) {
   let sort_test = new MinHeap(arr.length), res = [], len = arr.length
@@ -111,6 +112,21 @@ function Asc(arr) {
   }
   return res
 }
+// 利用最小堆求Top K
+function TopK(num, arr) {
+  let heap = new MinHeap(num)
+  for (let i=0; i<num; i++) {
+    heap.insert(arr[i])
+  }
+  for (let i=num; i<arr.length; i++) {
+    if (heap.min() < arr[i]) {
+      heap.remove_min()
+      heap.insert(arr[i])
+    } 
+  }
+  heap.print()
+}
+// *-- end --*
 
 let min_heap_test = new MinHeap(20)
 min_heap_test.init([53, 17, 78, 9, 45, 65, 87, 23])
@@ -125,4 +141,5 @@ console.log(min_heap_test.size())
 
 // 排序(最小堆的番外篇)
 console.log(Asc([10000, 53, 17, 78, 9, 45, 65, 87, 23, 1, 0, 121]))
+TopK(6, [3, 0, 12, 99, 4, 321, 8, 66, 23, 1000, 333, 56, 89, 1024, 2048, 30, 119])
 
