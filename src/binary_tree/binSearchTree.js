@@ -36,6 +36,54 @@ function BinSearchTree() {
       return node.rgtChildNode ? search(data, node.rgtChildNode) : null
     }
   }
+  // 返回节点下的最后一个左子节点
+  function findLatLftSon(node) {
+    if (!node.lftChildNode) {
+      return node
+    }
+    return findLatLftSon(node.lftChildNode)    
+  }
+  // 删除叶节点
+  function delLeafNode(del_node) {
+    // 判断删除节点是其父节点的左子节点还是右子节点
+    if (del_node.parentNode.lftChildNode) {
+      del_node.parentNode.lftChildNode = null
+    } else {
+      del_node.parentNode.rgtChildNode = null
+    }
+    del_node.parentNode = null
+    return true
+  }
+  // 删除只有一个子节点的父节点
+  function delSingleSonNode(del_node, son_node, dir) {
+    let parent_node = del_node.parentNode
+    if (parent_node.lftChildNode.data == del_node.data) {
+      parent_node.lftChildNode = son_node
+    } else {
+      parent_node.rgtChildNode = son_node
+    }
+    son_node.parentNode = parent_node
+    del_node.parentNode = null
+    if (dir == 0) {
+      del_node.lftChildNode = null
+    } else {
+      del_node.rgtChildNode = null
+    }
+    return true
+  }
+  // 删除有左右子节点的父节点
+  function delChildrenNode(node) {
+    // 返回将要删除节点的右子树的最后一个左子节点
+    let latLftSon = findLatLftSon(node.rgtChildNode)
+    console.log(latLftSon)
+    // 对将要删除节点的数据赋值为其最后一个左子节点的数据
+    node.data = latLftSon.data
+    // 判断最后的左子节点是否拥有右子节点，调用对应的方法删除之
+    if (latLftSon.rgtChildNode) {
+      return delSingleSonNode(latLftSon, latLftSon.rgtChildNode, 1)
+    } 
+    return delLeafNode(latLftSon)
+  }
   // *-- 私有属性 --*
   let root = null
   // *-- Api --*
@@ -58,14 +106,45 @@ function BinSearchTree() {
     }
     return search(data, root)
   }
+  // 根据关键码删除节点
+  this.delNode = data => {
+    let del_node = this.findNode(data)
+    if (!del_node) {
+      return false
+    }    
+    // 删除的节点为叶节点
+    if (!del_node.lftChildNode && !del_node.rgtChildNode) {
+      return delLeafNode(del_node)
+    }
+    // 删除的节点拥有左子树
+    if (del_node.lftChildNode && !del_node.rgtChildNode) {
+      return delSingleSonNode(del_node, del_node.lftChildNode, 0)
+    }
+    // 删除的节点拥有右子树
+    if (del_node.rgtChildNode && !del_node.lftChildNode) {
+      return delSingleSonNode(del_node, del_node.rgtChildNode, 1)
+    }
+    // 删除的节点拥有左右子树
+    return delChildrenNode(del_node)
+  }
 }
 
 let searchTree = new BinSearchTree()
-let arr = [19, 27, 40, 35, 25, 10, 5, 17, 13, 7, 8]
+let arr = [19, 27, 40, 35, 25, 10, 5, 17, 13, 7, 8, 20, 26, 24, 22]
 arr.forEach(item => {
   console.log(searchTree.insert(item))
 })
 console.log(searchTree.rootNode())
-console.log(searchTree.findNode(10))
-console.log(searchTree.findNode(1))
+
+console.log(searchTree.delNode(19))
+console.log(searchTree.rootNode())
+
+console.log(searchTree.delNode(8))
+console.log(searchTree.rootNode())
+
+console.log(searchTree.delNode(8))
+console.log(searchTree.rootNode())
+
+console.log(searchTree.delNode(10))
+console.log(searchTree.rootNode())
 
