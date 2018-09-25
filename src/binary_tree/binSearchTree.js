@@ -1,6 +1,8 @@
 let BinaryTreeNode = require('./binTree').node
 
 function BinSearchTree() {
+  // *-- 私有方法 --*
+  // 从节点开始向下对比关键码
   function shift(curNode, node) {
     if (curNode.data == node.data) {
       console.log('the data is already existed!')
@@ -23,18 +25,39 @@ function BinSearchTree() {
     curNode.parentNode = node
     return true
   }
+  // 根据关键码查找节点
+  function search(data, node) {
+    if (node.data == data) {
+      return node
+    }
+    if (node.data > data) {
+      return node.lftChildNode ? search(data, node.lftChildNode) : null
+    } else {
+      return node.rgtChildNode ? search(data, node.rgtChildNode) : null
+    }
+  }
+  // *-- 私有属性 --*
   let root = null
+  // *-- Api --*
+  // 插入节点
   this.insert = data => {
     let newNode = new BinaryTreeNode(data)
     // 判断是否有根节点，没有则直接赋值给根节点，否则进行节点关键值判断
     if (!root) {
       root = newNode
       return true
-    } else {
-      return shift(newNode, root)
-    }
+    } 
+    return shift(newNode, root)
   }
+  // 返回根节点
   this.rootNode = () => root
+  // 根据关键码搜索节点
+  this.findNode = data => {
+    if (!root) {
+      return null
+    }
+    return search(data, root)
+  }
 }
 
 let searchTree = new BinSearchTree()
@@ -43,4 +66,6 @@ arr.forEach(item => {
   console.log(searchTree.insert(item))
 })
 console.log(searchTree.rootNode())
+console.log(searchTree.findNode(10))
+console.log(searchTree.findNode(1))
 
