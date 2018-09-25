@@ -55,20 +55,22 @@ function BinSearchTree() {
     return true
   }
   // 删除只有一个子节点的父节点
-  function delSingleSonNode(del_node, son_node, dir) {
-    let parent_node = del_node.parentNode
-    if (parent_node.lftChildNode.data == del_node.data) {
-      parent_node.lftChildNode = son_node
+  function delSingleSonNode(del_node, son_node) {
+    if (del_node.parentNode) {
+      let parent_node = del_node.parentNode
+      if (parent_node.lftChildNode.data == del_node.data) {
+        parent_node.lftChildNode = son_node
+      } else {
+        parent_node.rgtChildNode = son_node
+      }
+      son_node.parentNode = parent_node     
     } else {
-      parent_node.rgtChildNode = son_node
-    }
-    son_node.parentNode = parent_node
-    del_node.parentNode = null
-    if (dir == 0) {
-      del_node.lftChildNode = null
-    } else {
-      del_node.rgtChildNode = null
-    }
+      root = son_node
+      root.parentNode = null
+    }        
+    del_node.parentNode = null 
+    del_node.lftChildNode = null
+    del_node.rgtChildNode = null
     return true
   }
   // 删除有左右子节点的父节点
@@ -80,7 +82,7 @@ function BinSearchTree() {
     node.data = latLftSon.data
     // 判断最后的左子节点是否拥有右子节点，调用对应的方法删除之
     if (latLftSon.rgtChildNode) {
-      return delSingleSonNode(latLftSon, latLftSon.rgtChildNode, 1)
+      return delSingleSonNode(latLftSon, latLftSon.rgtChildNode)
     } 
     return delLeafNode(latLftSon)
   }
@@ -118,11 +120,11 @@ function BinSearchTree() {
     }
     // 删除的节点拥有左子树
     if (del_node.lftChildNode && !del_node.rgtChildNode) {
-      return delSingleSonNode(del_node, del_node.lftChildNode, 0)
+      return delSingleSonNode(del_node, del_node.lftChildNode)
     }
     // 删除的节点拥有右子树
     if (del_node.rgtChildNode && !del_node.lftChildNode) {
-      return delSingleSonNode(del_node, del_node.rgtChildNode, 1)
+      return delSingleSonNode(del_node, del_node.rgtChildNode)
     }
     // 删除的节点拥有左右子树
     return delChildrenNode(del_node)
@@ -139,12 +141,16 @@ console.log(searchTree.rootNode())
 console.log(searchTree.delNode(19))
 console.log(searchTree.rootNode())
 
-console.log(searchTree.delNode(8))
-console.log(searchTree.rootNode())
-
-console.log(searchTree.delNode(8))
-console.log(searchTree.rootNode())
-
 console.log(searchTree.delNode(10))
 console.log(searchTree.rootNode())
 
+
+// let searchTree = new BinSearchTree()
+// let arr = [19, 27, 40]
+// arr.forEach(item => {
+//   console.log(searchTree.insert(item))
+// })
+
+// console.log(searchTree.rootNode())
+// console.log(searchTree.delNode(19))
+// console.log(searchTree.rootNode())
