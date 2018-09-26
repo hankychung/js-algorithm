@@ -1,1 +1,1 @@
-import './binary_tree/binSearchTree'
+import './order/quickOrder'
